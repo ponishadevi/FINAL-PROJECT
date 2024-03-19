@@ -8,6 +8,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly as plt
 import base64
+
 import numpy as np
 
 # Read the files
@@ -105,11 +106,12 @@ city_dropdown = dcc.Dropdown(
 )
 # Define the layout of the app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
-server = app.server
+server=app.server
 
 app.layout = html.Div([
     # Dropdown menu to select different sections
-    dcc.Dropdown(
+    dcc.Dropdown( 
+
         id='section-dropdown',
         options=[
             {'label': 'Home', 'value': 'home'},
@@ -140,6 +142,7 @@ def update_city_options(selected_country):
 
 
 # Callback to update visualizations based on the selected country and city
+# Callback to update visualizations based on the selected country and city
 @app.callback(
     [Output('visualization-1', 'figure'),
      Output('visualization-4', 'figure')],
@@ -155,21 +158,23 @@ def update_visualizations(selected_country, selected_city):
     fig1 = update_figure_1(filtered_data)
     fig4 = update_figure_4(filtered_data)
 
-
     return fig1, fig4
 
 
 #component 1
-# Define function to generate figure 1 based on filtered data
 def update_figure_1(filtered_data):
     top_10_costly_cuisines_data = filtered_data.groupby('Cuisines')['Average Cost for two'].mean().nlargest(10)
-    fig = px.bar(top_10_costly_cuisines_data,
-                 x=top_10_costly_cuisines_data.values,
-                 y=top_10_costly_cuisines_data.index,
-                 title='Top 10 Costly Cuisines',
-                 labels={'x': 'Average Cost', 'y': 'Cuisine'},
-                 orientation='h')
-    return go.FigureWidget(fig)
+    fig = go.Figure(go.Bar(
+        x=top_10_costly_cuisines_data.values,
+        y=top_10_costly_cuisines_data.index,
+        orientation='h'
+    ))
+    fig.update_layout(
+        title='Top 10 Costly Cuisines',
+        xaxis_title='Average Cost',
+        yaxis_title='Cuisine'
+    )
+    return fig
 #Component 2
 
 
@@ -196,12 +201,14 @@ fig3.update_layout(title='Table Booking Acceptance', showlegend=False)
 #Component 4-- Average Cost and Price Range by Country
 
 # Define function to generate figure 4 based on filtered data
+# Component 4
+# Define function to generate figure 4 based on filtered data
+# Define function to generate figure 4 based on filtered data
 def update_figure_4(filtered_data):
     fig = px.box(filtered_data, x='Country', y='Average Cost for two',
                  color='Price range', title='Average Cost and Price Range by Country',
                  labels={'x': 'Country', 'y': 'Average Cost for two', 'color': 'Price Range'})
-    return go.FigureWidget(fig)
-
+    return fig
 
 #component 5
 
