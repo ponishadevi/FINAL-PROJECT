@@ -105,7 +105,7 @@ city_dropdown = dcc.Dropdown(
 )
 # Define the layout of the app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
-server=app.server
+server = app.server
 
 app.layout = html.Div([
     # Dropdown menu to select different sections
